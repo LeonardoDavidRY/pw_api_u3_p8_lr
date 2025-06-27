@@ -15,14 +15,40 @@ public class EstudianteRepoImpl implements IEstudianteRepo {
 
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public Estudiante seleccionarPorId(Integer id) {
-      return this.entityManager.find(Estudiante.class, id);
+        return this.entityManager.find(Estudiante.class, id);
     }
+
     @Override
     public List<Estudiante> seleccionarTodos() {
         TypedQuery<Estudiante> myQuery = this.entityManager.createQuery("SELECT e FROM Estudiante e", Estudiante.class);
         return myQuery.getResultList();
+    }
+
+    
+
+    @Override
+    public void borrarPorId(Integer id) {
+        this.entityManager.remove(this.seleccionarPorId(id));
+
+    }
+
+    @Override
+    public void insertar(Estudiante estudiante) {
+        this.entityManager.persist(estudiante);
+
+    }
+
+    @Override
+    public void actualizarPorId(Estudiante estudiante) {
+      this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void actualizarParcialPorId(Estudiante estudiante) {
+      this.entityManager.merge(estudiante);
     }
 
 }
