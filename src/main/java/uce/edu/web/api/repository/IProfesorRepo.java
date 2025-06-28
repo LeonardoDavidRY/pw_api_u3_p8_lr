@@ -10,4 +10,12 @@ public interface IProfesorRepo {
 
     public List<Profesor> seleccionarTodos();
 
+    public void actualizarPorId(Profesor profesor);
+
+    public void actualizarParcialPorId(Profesor profesor);
+
+    public void borrarPorId(Integer id);
+    
+    public void insertar(Profesor profesor);
+
 }

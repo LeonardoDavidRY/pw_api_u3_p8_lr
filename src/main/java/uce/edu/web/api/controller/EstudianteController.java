@@ -44,7 +44,7 @@ public class EstudianteController {
     @Path("/{id}")
     public void actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
-        this.estudianteService.actualizarPorId(this.estudianteService.buscarPorId(id));
+        this.estudianteService.actualizarPorId(estudiante);
     }
 
     @PATCH

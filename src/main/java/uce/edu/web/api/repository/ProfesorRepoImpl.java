@@ -27,4 +27,24 @@ public class ProfesorRepoImpl implements IProfesorRepo {
         return myQuery.getResultList();
     }
 
+    @Override
+    public void actualizarPorId(Profesor profesor) {
+        this.entityManager.merge(profesor);
+    }
+
+    @Override
+    public void actualizarParcialPorId(Profesor profesor) {
+        this.entityManager.merge(profesor);
+    }
+
+    @Override
+    public void borrarPorId(Integer id) {
+        this.entityManager.remove(this.seleccionarPorId(id));
+    }
+
+    @Override
+    public void insertar(Profesor profesor) {
+        this.entityManager.persist(profesor);
+    }
+
 }
