@@ -31,42 +31,50 @@ public class EstudianteController {
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response consultarPorId(@PathParam("id") Integer id) {
-
-        return Response.status(227).entity(this.estudianteService.buscarPorId(id)).build();
+        return Response.status(Response.Status.OK).entity(this.estudianteService.buscarPorId(id)).build();
     }
 
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Consultar estudiante",
-            description = "Consulta todos los estudiantes registrados en el sistema")
+    @Operation(summary = "Consultar estudiante", description = "Consulta todos los estudiantes registrados en el sistema")
     public Response consultarTodos(@QueryParam("genero") String genero,
             @QueryParam("provincia") String provincia) {
         System.out.println(provincia);
         return Response.status(Response.Status.OK)
                 .entity(this.estudianteService.buscarTodos(genero)).build();
-
     }
 
     @POST
     @Path("")
-    @Consumes(MediaType.APPLICATION_XML)
-    public void guardar(@RequestBody Estudiante estudiante) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response guardar(@RequestBody Estudiante estudiante) {
         this.estudianteService.guardar(estudiante);
+        return Response.status(Response.Status.CREATED)
+                .entity("{\"mensaje\": \"Estudiante guardado exitosamente\"}")
+                .build();
     }
 
     @PUT
     @Path("/{id}")
-    public void actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
         this.estudianteService.actualizarPorId(estudiante);
+        return Response.status(Response.Status.OK)
+                .entity("{\"mensaje\": \"Estudiante actualizado exitosamente\"}")
+                .build();
     }
 
     @PATCH
     @Path("/{id}")
-    public void actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
         Estudiante e = this.estudianteService.buscarPorId(id);
         if (estudiante.getApellido() != null) {
@@ -79,12 +87,18 @@ public class EstudianteController {
             e.setFechaNacimiento(estudiante.getFechaNacimiento());
         }
         this.estudianteService.actualizarParcialPorId(e);
+        return Response.status(Response.Status.OK)
+                .entity("{\"mensaje\": \"Estudiante actualizado parcialmente exitosamente\"}")
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
-    public void borrarPorId(@PathParam("id") Integer id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response borrarPorId(@PathParam("id") Integer id) {
         this.estudianteService.borrarPorId(id);
-
+        return Response.status(Response.Status.NO_CONTENT)
+                .entity("{\"mensaje\": \"Estudiante eliminado exitosamente\"}")
+                .build();
     }
 }
