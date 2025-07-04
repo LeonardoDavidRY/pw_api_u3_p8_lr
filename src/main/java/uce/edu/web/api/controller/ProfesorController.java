@@ -1,7 +1,5 @@
 package uce.edu.web.api.controller;
 
-import java.util.List;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import jakarta.inject.Inject;
