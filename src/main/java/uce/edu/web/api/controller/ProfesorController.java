@@ -1,5 +1,8 @@
 package uce.edu.web.api.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import jakarta.inject.Inject;
@@ -13,12 +16,18 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.repository.modelo.Profesor;
 import uce.edu.web.api.service.IProfesorService;
+import uce.edu.web.api.service.to.ProfesorTo;
 
 @Path("/profesores")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ProfesorController {
 
     @Inject
@@ -26,17 +35,16 @@ public class ProfesorController {
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar profesor por ID", description = "Busca y retorna un profesor específico por su identificador único")
-    public Response consultarPorId(@PathParam("id") Integer id) {
+    public Response consultarPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        ProfesorTo profesorTo = this.profesorService.buscarPorId(id, uriInfo);
         return Response.status(Response.Status.OK)
-                .entity(this.profesorService.buscarPorId(id))
+                .entity(profesorTo)
                 .build();
     }
 
     @GET
     @Path("")
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar todos los profesores", description = "Retorna la lista completa de profesores registrados en el sistema")
     public Response consultarTodos(@QueryParam("titulo") String titulo,
             @QueryParam("carrera") String carrera) {
@@ -48,8 +56,6 @@ public class ProfesorController {
 
     @POST
     @Path("")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Crear nuevo profesor", description = "Registra un nuevo profesor en el sistema")
     public Response guardar(Profesor profesor) {
         this.profesorService.guardar(profesor);
@@ -60,8 +66,6 @@ public class ProfesorController {
 
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Actualizar profesor completo", description = "Actualiza todos los campos de un profesor existente")
     public Response actualizarPorId(Profesor profesor, @PathParam("id") Integer id) {
         profesor.setId(id);
@@ -71,10 +75,9 @@ public class ProfesorController {
                 .build();
     }
 
+    /* 
     @PATCH
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Actualizar profesor parcial", description = "Actualiza solo los campos específicos de un profesor existente")
     public Response actualizarParcialPorId(Profesor profesor, @PathParam("id") Integer id) {
         profesor.setId(id);
@@ -96,15 +99,30 @@ public class ProfesorController {
                 .entity("{\"mensaje\": \"Profesor actualizado parcialmente exitosamente\"}")
                 .build();
     }
+    */
 
     @DELETE
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Eliminar profesor", description = "Elimina un profesor del sistema por su identificador")
     public Response eliminarPorId(@PathParam("id") Integer id) {
         this.profesorService.eliminarPorId(id);
         return Response.status(Response.Status.OK)
                 .entity("{\"mensaje\": \"Profesor eliminado exitosamente\"}")
                 .build();
+    }
+
+    @GET
+    @Path("/{id}/hijos")
+    @Operation(summary = "Consultar hijos de un profesor", description = "Retorna los hijos asociados a un profesor por su ID")
+    public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
+        Hijo h1 = new Hijo();
+        h1.setNombre("Sami");
+        Hijo h2 = new Hijo();
+        h2.setNombre("Iris");
+
+        List<Hijo> hijos = new ArrayList<>();
+        hijos.add(h1);
+        hijos.add(h2);
+        return hijos;
     }
 }
