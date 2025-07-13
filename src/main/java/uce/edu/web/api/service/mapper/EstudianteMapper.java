@@ -1,5 +1,7 @@
 package uce.edu.web.api.service.mapper;
 
+import java.util.List;
+
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.service.to.EstudianteTo;
 
@@ -26,6 +28,24 @@ public class EstudianteMapper {
         estudiante.setFechaNacimiento(estudianteTo.getFechaNacimiento());
 
         return estudiante;
+    }
+    public static List<EstudianteTo> toToList(List<Estudiante> estudiantes) {
+        return estudiantes.stream().map(EstudianteMapper::toTo).toList();
+    }
+
+    public static void updateEntityFromTo(Estudiante entity, EstudianteTo to) {
+        if (to.getApellido() != null) {
+            entity.setApellido(to.getApellido());
+        }
+        if (to.getNombre() != null) {
+            entity.setNombre(to.getNombre());
+        }
+        if (to.getFechaNacimiento() != null) {
+            entity.setFechaNacimiento(to.getFechaNacimiento());
+        }
+        if (to.getGenero() != null) {
+            entity.setGenero(to.getGenero());
+        }
     }
 
 }

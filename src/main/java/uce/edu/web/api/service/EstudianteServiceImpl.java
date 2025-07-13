@@ -6,6 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import uce.edu.web.api.repository.IEstudianteRepo;
 import uce.edu.web.api.repository.modelo.Estudiante;
+import uce.edu.web.api.service.mapper.EstudianteMapper;
+import uce.edu.web.api.service.to.EstudianteTo;
 
 @ApplicationScoped
 public class EstudianteServiceImpl implements IEstudianteService {
@@ -30,18 +32,22 @@ public class EstudianteServiceImpl implements IEstudianteService {
     }
 
     @Override
-    public void guardar(Estudiante estudiante) {
-        this.estudianteRepo.insertar(estudiante);
+    public void guardar(EstudianteTo estudiante) {
+        Estudiante est = EstudianteMapper.toEntity(estudiante);
+        this.estudianteRepo.insertar(est);
     }
 
     @Override
-    public void actualizarPorId(Estudiante estudiante) {
-        this.estudianteRepo.actualizarPorId(estudiante);
+    public void actualizarPorId(EstudianteTo estudiante) {
+        Estudiante est = EstudianteMapper.toEntity(estudiante);
+        this.estudianteRepo.actualizarPorId(est);
     }
 
     @Override
-    public void actualizarParcialPorId(Estudiante estudiante) {
-        this.estudianteRepo.actualizarParcialPorId(estudiante);
+    public void actualizarParcialPorId(EstudianteTo estudiante, Integer id) {
+        Estudiante est = this.estudianteRepo.seleccionarPorId(id);
+        EstudianteMapper.updateEntityFromTo(est, estudiante);
+        this.estudianteRepo.actualizarParcialPorId(est);
     }
 
 }
