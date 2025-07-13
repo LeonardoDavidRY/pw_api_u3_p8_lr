@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.persistence.Column;
 import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.controller.ProfesorController;
 
@@ -23,6 +22,9 @@ public class ProfesorTo {
 
     public Map<String, String> _links = new HashMap<>();
 
+    public ProfesorTo() {
+    }
+
     public ProfesorTo(Integer id, String nombre, String apellido, String titulo, LocalDateTime fechaIngreso, UriInfo uriInfo) {
         this.id = id;
         this.nombre = nombre;
@@ -31,6 +33,12 @@ public class ProfesorTo {
         this.fechaIngreso = fechaIngreso;
 
         URI todosHijos =  uriInfo.getBaseUriBuilder().path(ProfesorController.class)
+                .path(ProfesorController.class, "obtenerHijosPorId").build(id);
+        _links.put("todosHijos", todosHijos.toString());
+    }
+
+    public void buildURI(UriInfo uriInfo) {
+        URI todosHijos = uriInfo.getBaseUriBuilder().path(ProfesorController.class)
                 .path(ProfesorController.class, "obtenerHijosPorId").build(id);
         _links.put("todosHijos", todosHijos.toString());
     }

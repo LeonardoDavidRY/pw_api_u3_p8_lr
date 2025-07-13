@@ -32,6 +32,11 @@ public class Hijo {
     @JoinColumn(name = "hijo_estudiante")
     private Estudiante estudiante;
 
+    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "hijo_profesor")
+    private Profesor profesor;
+
     public String getNombre() {
         return nombre;
     }
@@ -56,7 +61,20 @@ public class Hijo {
         this.apellido = apellido;
     }
     
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
 
-    
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
+    public Profesor getProfesor() {
+        return profesor;
+    }
+
+    public void setProfesor(Profesor profesor) {
+        this.profesor = profesor;
+    }
 
 }

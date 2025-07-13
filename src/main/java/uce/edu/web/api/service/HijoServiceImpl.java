@@ -15,8 +15,12 @@ public class HijoServiceImpl implements HijoService {
 
     @Override
     public List<Hijo> buscarPorEstudianteId(Integer id) {
-
         return hijoRepo.buscarPorEstudianteId(id);
+    }
+
+    @Override
+    public List<Hijo> buscarPorProfesorId(Integer id) {
+        return hijoRepo.buscarPorProfesorId(id);
     }
 
 }

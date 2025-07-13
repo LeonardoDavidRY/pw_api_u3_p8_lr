@@ -4,26 +4,20 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.repository.IProfesorRepo;
 import uce.edu.web.api.repository.modelo.Profesor;
+import uce.edu.web.api.service.mapper.ProfesorMapper;
 import uce.edu.web.api.service.to.ProfesorTo;
 
 @ApplicationScoped
 public class ProfesorServiceImpl implements IProfesorService {
 
-  
     @Inject
     private IProfesorRepo profesorRepo;
 
     @Override
-    public ProfesorTo buscarPorId(Integer id, UriInfo uriInfo) {
-
-        Profesor profesor = this.profesorRepo.seleccionarPorId(id);
-        ProfesorTo profesorTo = new ProfesorTo(profesor.getId(), profesor.getNombre(), profesor.getApellido(),
-                profesor.getTitulo(), profesor.getFechaIngreso(), uriInfo);
-
-        return profesorTo;
+    public Profesor buscarPorId(Integer id) {
+        return this.profesorRepo.seleccionarPorId(id);
     }
     
     @Override
@@ -32,12 +26,15 @@ public class ProfesorServiceImpl implements IProfesorService {
     }
 
     @Override
-    public void actualizarPorId(Profesor profesor) {
+    public void actualizarPorId(ProfesorTo profesorTo) {
+        Profesor profesor = ProfesorMapper.toEntity(profesorTo);
         this.profesorRepo.actualizarPorId(profesor);
     }
 
     @Override
-    public void actualizarParcialPorId(Profesor profesor) {
+    public void actualizarParcialPorId(ProfesorTo profesorTo, Integer id) {
+        Profesor profesor = this.profesorRepo.seleccionarPorId(id);
+        ProfesorMapper.updateEntityFromTo(profesor, profesorTo);
         this.profesorRepo.actualizarParcialPorId(profesor);
     }
 
@@ -47,7 +44,8 @@ public class ProfesorServiceImpl implements IProfesorService {
     }
 
     @Override
-    public void guardar(Profesor profesor) {
+    public void guardar(ProfesorTo profesorTo) {
+        Profesor profesor = ProfesorMapper.toEntity(profesorTo);
         this.profesorRepo.insertar(profesor);
     }
 
