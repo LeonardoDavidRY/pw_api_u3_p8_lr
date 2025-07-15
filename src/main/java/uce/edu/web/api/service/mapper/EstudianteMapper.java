@@ -26,6 +26,7 @@ public class EstudianteMapper {
         estudiante.setNombre(estudianteTo.getNombre());
         estudiante.setApellido(estudianteTo.getApellido());
         estudiante.setFechaNacimiento(estudianteTo.getFechaNacimiento());
+        estudiante.setGenero(estudianteTo.getGenero());
 
         return estudiante;
     }
