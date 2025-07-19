@@ -3,9 +3,13 @@ package uce.edu.web.api.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.ClaimValue;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,8 +27,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import uce.edu.web.api.repository.modelo.Estudiante;
-import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.mapper.EstudianteMapper;
@@ -38,6 +40,13 @@ import uce.edu.web.api.service.to.HijoTo;
 public class EstudianteController {
 
     @Inject
+    JsonWebToken jwt;
+
+    @Inject
+    @Claim("sub")
+    ClaimValue<String> subject;
+
+    @Inject
     private IEstudianteService estudianteService;
     @PersistenceContext
     private EntityManager entityManager;
@@ -47,6 +56,7 @@ public class EstudianteController {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("admin")
     @Operation(summary = "Consultar estudiante por ID", description = "Este endpoint permite consultar un estudiante por su ID.")
     public Response consultarPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
 
